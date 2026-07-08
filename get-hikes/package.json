@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "partner.js",
   "scripts": {
-    "start": "node partner.js"
+    "dev": "node partner.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3"
