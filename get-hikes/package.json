@@ -1,0 +1,15 @@
+{
+  "name": "mock-partner",
+  "version": "0.0.1",
+  "description": "Mock partner testing the client credentials OAuth2 flow for reading hike details",
+  "license": "MIT",
+  "author": "Petru Braha",
+  "type": "commonjs",
+  "main": "partner.js",
+  "scripts": {
+    "start": "node partner.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3"
+  }
+}
