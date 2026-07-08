@@ -4,6 +4,28 @@
 
 This project is a mock Node.js server demonstrating how a partner can securely retrieve our hikes data in JSON format. It utilizes the OAuth2 Client Credentials flow for secure server-to-server communication with the Varful API.
 
+> Don't create a new access token for each API call. Instead, cache and reuse it; one single access token lasts for 10 hours.
+
+## Input and Output
+
+### Input Queries
+
+You can optionally filter the retrieved hikes by specifying a circular search area using query parameters:
+
+- **`start_longitude`**: The longitude of the search area center (must be a number between `-180` and `180`).
+- **`start_latitude`**: The latitude of the search area center (must be a number between `-90` and `90`).
+- **`start_radius`**: The radius of the search area in kilometers (must be a positive number).
+
+**Important Validation Rules:**
+
+- If you want to filter by location, **both** `start_longitude` and `start_latitude` must be provided together.
+- The `start_radius` parameter can only be used if both coordinates are provided.
+- If coordinates are provided but `start_radius` is omitted, the radius defaults to **100 km**.
+
+### Output
+
+The API responds with a JSON array containing the hike objects that match your filters. Each object includes detailed information about the hike, such as its title, track details, scheduled dates, and other metadata.
+
 ## Setup Instructions
 
 To run this demo locally, follow these steps:

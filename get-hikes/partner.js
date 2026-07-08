@@ -16,12 +16,27 @@ if (missingEnv.length > 0) {
   process.exit(1);
 }
 
+const queries = {
+  longitude: process.env.START_LONGITUDE,
+  latitude: process.env.START_LATITUDE,
+  radius: process.env.START_RADIUS,
+};
+
+const buildQueryString = () => {
+  const params = new URLSearchParams();
+  if (queries.longitude) params.append("start_longitude", queries.longitude);
+  if (queries.latitude) params.append("start_latitude", queries.latitude);
+  if (queries.radius) params.append("start_radius", queries.radius);
+  const qs = params.toString();
+  return qs ? `?${qs}` : "";
+};
+
 // Client and partner are synonyms.
 const config = {
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
   varfulTokenUrl: `${process.env.VARFUL_HOST}/o/token/`,
-  varfulApiUrl: `${process.env.VARFUL_HOST}/api/drumetii/`,
+  varfulApiUrl: `${process.env.VARFUL_HOST}/api/drumetii/${buildQueryString()}`,
 };
 
 main().then((hikes) => {
@@ -32,7 +47,7 @@ main().then((hikes) => {
 
 /**
  * We recommend to NOT create an access token for each API call.
- * Instead cache and reuse it, one single access token lasts for 30 days.
+ * Instead cache and reuse it, one single access token lasts for 10 hours.
  * Reading from file system is convinient for the demo, use a better caching mechanism in production.
  */
 async function main() {
