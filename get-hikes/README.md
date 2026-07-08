@@ -27,5 +27,5 @@ To run this demo locally, follow these steps:
 ## References
 
 - [Our Website](https://varful.ro)
-- [Our Terms and Conditions](https://varful.ro/c/termeni-si-conditii/)
+- [Our Terms and Conditions](https://varful.ro/termeni-si-conditii/)
 - [OAuth 2.0 Client Credentials Grant](https://oauth.net/2/grant-types/client-credentials/)
