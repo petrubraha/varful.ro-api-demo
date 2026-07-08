@@ -1,4 +1,5 @@
 const dotenv = require("dotenv");
+const fs = require("fs").promises;
 dotenv.config();
 
 // --- Configuration Validation ---
@@ -25,20 +26,41 @@ const config = {
 
 main().then((hikes) => {
   console.log(hikes);
+}).catch((error) => {
+  console.error(error);
 });
 
+/**
+ * We recommend to NOT create an access token for each API call.
+ * Instead cache and reuse it, one single access token lasts for 30 days.
+ * Reading from file system is convinient for the demo, use a better caching mechanism in production.
+ */
 async function main() {
+  const encodedCredentials = btoa(`${config.clientId}:${config.clientSecret}`);
+  let accessToken = null;
+
   try {
-    console.log("Exchanging credentials for token...");
-    const encodedCredentials = btoa(
-      `${config.clientId}:${config.clientSecret}`,
-    );
-    const accessToken = await exchangeCredentialsForToken(encodedCredentials);
-    console.log("Retrieving posts with access token...");
+    accessToken = (await fs.readFile(".token", "utf8")).trim();
+  } catch (error) {
+    console.log("Exchanging credentials and caching access token...");
+    accessToken = await exchangeCredentialsForToken(encodedCredentials);
+    await fs.writeFile(".token", accessToken);
+  }
+
+  try {
+    console.log("Retrieving hikes with access token...");
     return await fetchWithAccess(accessToken, "GET");
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    if (error.status !== 401) {
+      throw error;
+    }
+
+    console.log("Refreshing and caching a new access token...");
+    accessToken = await exchangeCredentialsForToken(encodedCredentials);
+    await fs.writeFile(".token", accessToken);
+
+    console.log("Retrieving hikes with the new access token...");
+    return await fetchWithAccess(accessToken, "GET");
   }
 }
 
@@ -83,9 +105,11 @@ async function fetchWithAccess(accessToken, method) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(
+    const error = new Error(
       `Fetch failed (${response.status}): ${errorText}`,
     );
+    error.status = response.status;
+    throw error;
   }
 
   return await response.json();
