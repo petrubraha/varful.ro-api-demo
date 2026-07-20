@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Partner Website</title>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Partner Website</h1>
+      <p>Click below to share your latest adventure to varful.ro.</p>
+      <form action="http://localhost:3000/api/partner/posts" method="POST">
+        <input name="user" value="petrubraha" />
+        <input
+          name="image"
+          value="https://avatars.githubusercontent.com/u/153606307"
+        />
+        <input name="location" value="Bucegi" />
+        <input name="location_slug" value="bucegi" />
+        <input name="caption" value="My latest adventure" />
+        <button type="submit">Post also on varful.ro</button>
+      </form>
+    </div>
+  </body>
+</html>
